@@ -1,0 +1,73 @@
+package org.firstinspires.ftc.teamcode.DiscBots;
+
+import org.firstinspires.ftc.teamcode.ATOM.*;
+import com.qualcomm.robotcore.util.Hardware;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
+
+
+
+@Autonomous(name="TeleOp Java", group="Linear Opmode")
+
+public class DiscBotsTeleOp extends LinearOpMode {
+
+    private ElapsedTime runtime = new ElapsedTime();
+    private DcMotor LeftDriveRear = null;
+    private DcMotor RightDriveRear = null;
+    private DiscBotsHardware robot   = new DiscbotsHardware();
+
+    @Override
+    public void runOpMode() {
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
+        InitializeMotors();
+        waitForStart();
+        runtime.reset();
+
+
+        while (opModeIsActive()) {
+
+
+            double leftPower;
+            double rightPower;
+           
+             telemetry.addData("Calling", "DriveTrain");
+             telemetry.update();
+             DiscBotsDriveTrain DiscBotsDriveTrain = new DiscbotsDriveTrain(robot) ;
+                  leftPower  = -gamepad1.left_stick_y;
+                  rightPower = -gamepad1.right_stick_y;
+             DiscBotsDriveTrain.PDrive(leftPower,rightPower,0.0);
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            telemetry.update();
+        }
+        
+          
+    }
+    
+     public void InitializeMotors() {
+        
+        robot.init(hardwareMap);
+        
+         }
+     public void Drive(double Left, double Right,double timeoutS) {
+            runtime.reset();
+            while (runtime.seconds() < timeoutS) {
+
+                LeftDriveRear.setPower(Left);
+                RightDriveRear.setPower(Right);
+                
+               }
+
+                LeftDriveRear.setPower(0);
+                RightDriveRear.setPower(0);
+        
+         }
+           
+}
